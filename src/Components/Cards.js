@@ -1,5 +1,9 @@
-import React from "react";
-import "./Cards.css"
+import React,{useState} from "react";
+import "./Cards.css";
+import HourglassTopIcon from '@mui/icons-material/HourglassTop';
+import CheckBoxIcon from '@mui/icons-material/CheckBox';
+import ViewJobModal from "./viewJobModal";
+
 function truncate(text, maxLength) {
   if (text.length > maxLength) {
     return text.substring(0, maxLength) ; // Truncate the text 
@@ -8,6 +12,18 @@ function truncate(text, maxLength) {
 }
 
 const Cards = ({jobs}) =>{
+   
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [selectedJobDetails, setSelectedJobDetails] = useState("");
+
+    const openModal = (details) => {
+      setSelectedJobDetails(details);
+      setIsModalOpen(true);
+    };
+
+    const closeModal = () => {
+      setIsModalOpen(false);
+    };
 
     if(!jobs.length){
        return <div className="noresults">No Results found for selected options !! </div>
@@ -19,7 +35,7 @@ const Cards = ({jobs}) =>{
            {jobs.map((job) => (
             <div key={job.jdUid} className="job-card">
                 <div className="time-ago">
-                    <span>⌛</span> Posted 10 days ago
+                    <span > <HourglassTopIcon style={{fontSize: '11px'}}/></span> Posted 10 days ago
                 </div>
                 <div className="job-header">
                 {job.logoUrl && <img src={job.logoUrl} alt={`${job.companyName} logo`} className="company-logo" />}
@@ -34,7 +50,7 @@ const Cards = ({jobs}) =>{
                 
              
                 <div className="job-salary">
-                  <p>Estimated Salary: ${job.minJdSalary || "N/A"}  - ${job.maxJdSalary || 'N/A'} ✅</p>
+                  Estimated Salary: ${job.minJdSalary || "N/A"}  - ${job.maxJdSalary || 'N/A'} <CheckBoxIcon style={{ color: 'green' ,fontSize: '16px'}}/>
                 </div>
               
               
@@ -42,13 +58,18 @@ const Cards = ({jobs}) =>{
                 <div className='About-company'>About Company:</div>
                 <div className='About-us'>About us</div>
               {job.jobDetailsFromCompany && (
+                <>
               <div className="job-description" dangerouslySetInnerHTML={{ __html: truncate(job.jobDetailsFromCompany, 400) }}></div>
+              <button className="view-job-btn" onClick={() => openModal(job.jobDetailsFromCompany)}>View job</button>
+              
+              </>
             )}
+            
             </div>
-           
+            
 
             <div className='exp'>
-                <p  className='job-salary'>Minimum Experience</p>
+                <div  className='job-salary'>Minimum Experience</div>
                 <div className='job-years'> {job.minExp || "N/A"} years</div>
             </div>
 
@@ -68,7 +89,10 @@ const Cards = ({jobs}) =>{
             </div>
           </div>
         ))}
-      
+        {isModalOpen && (
+              <ViewJobModal details={selectedJobDetails} closeModal={closeModal}/>
+              
+            )}
         </div>
     )
     
