@@ -3,6 +3,7 @@ import './App.css';
 import  Cards  from './Components/Cards';
 import Multiselect from 'multiselect-react-dropdown';
 import './Components/searchBar.css';
+import InfiniteScroll from 'react-infinite-scroll-component';
 
 function App() {
   const [jobs, setJobs] = useState([]);
@@ -13,6 +14,7 @@ function App() {
   const [selectedSalary, setSelectedSalary] = useState(null);
   const [selectedLocation, setSelectedLocation] = useState(null);
   const [companyFilter,setCompanyFilter] =useState('');
+  // const [total,setTotal] = useState();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -38,7 +40,7 @@ function App() {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
         const data = await response.json();
-        console.log(data);
+        // setTotal( data.totalCount);
         if (!data.jdList || !Array.isArray(data.jdList)) {
           throw new Error('Data format error: expected an array of jobs');
         }
@@ -54,6 +56,33 @@ function App() {
     fetchData();
   }, []);
 
+  const fetchMoreData = async () => {
+    try {
+
+      const myHeaders = new Headers({
+        "Content-Type": "application/json"
+      });
+      const body = JSON.stringify({
+        "limit": 10,
+        "offset": jobs.length
+      });
+
+      const requestOptions = {
+        method: "POST",
+        headers: myHeaders,
+        body: body
+      };
+      const response = await fetch(`https://api.weekday.technology/adhoc/getSampleJdJSON`,requestOptions);
+      const data = await response.json();
+      if (!data.jdList || !Array.isArray(data.jdList)) {
+        throw new Error('Data format error: expected an array of jobs');
+      }
+      setJobs(prevJobs => [...prevJobs, ...data.jdList]);
+    } catch (error) {
+      console.error('Fetch error:', error);
+      setError(error.message);
+    }
+  };
   const filteredJobs = jobs.filter(job => {
     if (selectedRole && job.jobRole !== selectedRole.label) return false;
     if (selectedExperience && (job.minExp === null || job.maxExp === null || 
@@ -152,7 +181,6 @@ function App() {
             label='Company'
             placeholder='Company Name'
             style={{ 
-              // Add your custom styles here
               
               border: '0.5px solid #ccc',
               borderRadius: '4px',
@@ -169,7 +197,22 @@ function App() {
          </div>
         
       </div>
-      <Cards jobs={filteredJobs}/>
+      
+      <InfiniteScroll
+        dataLength={filteredJobs.length}
+        next={fetchMoreData}
+        hasMore={true}
+        loader={<h4>Loading...</h4>}
+        endMessage={
+          <p style={{ textAlign: 'center' }}>
+            <b>No more jobs to load</b>
+          </p>
+        }
+      >
+        <div className='cards'>
+          <Cards jobs={filteredJobs} />
+        </div>
+      </InfiniteScroll>
     </div>
     
   );

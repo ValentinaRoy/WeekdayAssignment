@@ -4,6 +4,7 @@ import HourglassTopIcon from '@mui/icons-material/HourglassTop';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import ViewJobModal from "./viewJobModal";
 
+
 function truncate(text, maxLength) {
   if (text.length > maxLength) {
     return text.substring(0, maxLength) ; // Truncate the text 
