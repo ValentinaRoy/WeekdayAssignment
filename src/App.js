@@ -157,7 +157,7 @@ function App() {
           <Multiselect
             options={salaryOptions}
             displayValue="label"
-            placeholder=" Min Salary"
+            placeholder=" Minimum Base Pay Salary"
             onSelect={(selectedList) => setSelectedSalary(selectedList[0])}
             onRemove={() => setSelectedSalary(null)}
           />
@@ -202,7 +202,7 @@ function App() {
         dataLength={filteredJobs.length}
         next={fetchMoreData}
         hasMore={true}
-        loader={<h4>Loading...</h4>}
+        loader={ <h4></h4>}
         endMessage={
           <p style={{ textAlign: 'center' }}>
             <b>No more jobs to load</b>

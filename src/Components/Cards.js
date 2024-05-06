@@ -27,7 +27,7 @@ const Cards = ({jobs}) =>{
     };
 
     if(!jobs.length){
-       return <div className="noresults">No Results found for selected options !! </div>
+       return <div className="noresults"><h2>No Results found for selected options !!</h2> </div>
     }
     
 
