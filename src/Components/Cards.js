@@ -69,7 +69,7 @@ const Cards = ({jobs}) =>{
             
 
             <div className='exp'>
-                <div  className='job-salary'>Minimum Experience</div>
+                <div  className='job-exp'>Minimum Experience</div>
                 <div className='job-years'> {job.minExp || "N/A"} years</div>
             </div>
 
