@@ -179,7 +179,7 @@ function App() {
           <input 
             type='text'
             label='Company'
-            placeholder='Company Name'
+            placeholder=' Search Company Name'
             style={{ 
               
               border: '0.5px solid #ccc',
@@ -202,7 +202,7 @@ function App() {
         dataLength={filteredJobs.length}
         next={fetchMoreData}
         hasMore={true}
-        loader={ <h4></h4>}
+        loader={ <h4>Loading...</h4>}
         endMessage={
           <p style={{ textAlign: 'center' }}>
             <b>No more jobs to load</b>
