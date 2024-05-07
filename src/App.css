@@ -1,5 +1,14 @@
+@font-face {
+  font-family: "Lexend", sans-serif;
+  src: url('https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap');
+}
+body {
+
+  font-family: "Lexend" ,sans-serif !important;
+}
 .app {
-  margin:20px
+  margin:20px;
+  
 }
 
 .App-logo {
@@ -35,4 +44,16 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+.filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap:2em;
+  padding: 20px;
+
+}
+
+.filter-bar input{
+  font-family: "Lexend" ,sans-serif ;
 }

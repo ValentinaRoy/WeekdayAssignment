@@ -31,4 +31,4 @@ Responsive Design
 The UI created is Responsiveness and mobile friendly.
 
 ### Project Image
-![alt text](image-1.png)
+![alt text](image.png)

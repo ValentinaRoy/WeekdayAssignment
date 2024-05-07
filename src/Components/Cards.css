@@ -1,8 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Lexend&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Lexend:wght@200&display=swap');
-body{
-    font-family: "Lexend", sans-serif;
-}
+
 .card-container{
     
     display: grid;
@@ -26,7 +24,6 @@ body{
     box-shadow: 0px 0px 2px 1px rgba(0, 0, 0,0.1);
     font-size: 9px;
     color: #333;
-    font-family: "Lexend", sans-serif;
     width: fit-content;
 }
 

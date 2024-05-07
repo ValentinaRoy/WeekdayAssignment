@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
 import  Cards  from './Components/Cards';
-import Multiselect from 'multiselect-react-dropdown';
-import './Components/searchBar.css';
 import InfiniteScroll from 'react-infinite-scroll-component';
+import Select from 'react-select';
 
 function App() {
   const [jobs, setJobs] = useState([]);
@@ -14,7 +13,6 @@ function App() {
   const [selectedSalary, setSelectedSalary] = useState(null);
   const [selectedLocation, setSelectedLocation] = useState(null);
   const [companyFilter,setCompanyFilter] =useState('');
-  // const [total,setTotal] = useState();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -40,7 +38,6 @@ function App() {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
         const data = await response.json();
-        // setTotal( data.totalCount);
         if (!data.jdList || !Array.isArray(data.jdList)) {
           throw new Error('Data format error: expected an array of jobs');
         }
@@ -83,15 +80,28 @@ function App() {
       setError(error.message);
     }
   };
-  const filteredJobs = jobs.filter(job => {
-    if (selectedRole && job.jobRole !== selectedRole.label) return false;
-    if (selectedExperience && (job.minExp === null || job.maxExp === null || 
-        (job.minExp > selectedExperience.label || job.maxExp < selectedExperience.label))) return false;
-    if (selectedSalary && (job.minJdSalary === null || job.maxJdSalary === null || 
-        (job.minJdSalary > selectedSalary.label || job.maxJdSalary < selectedSalary.label))) return false;
-    if (selectedLocation && job.location !== selectedLocation.label) return false;
-    if (companyFilter && job.companyName && !job.companyName.toLowerCase().includes(companyFilter.toLowerCase())) return false;
-    return true;
+    const filteredJobs = jobs.filter(job => {
+      const rolesArray = selectedRole || [];
+      const expArray =selectedExperience || [];
+      const salaryArray =selectedSalary || [];
+      const locationArray =selectedLocation || [];
+      if (rolesArray.length > 0) {
+        const roleMatch = rolesArray.some(selectedRole => selectedRole.label === job.jobRole);
+        if (!roleMatch) return false;
+      }
+      if (expArray.length > 0 && 
+        (job.minExp === null || job.maxExp === null || 
+        !expArray.some(selectedExperience => job.minExp <= selectedExperience.label))) return false;
+
+      if (salaryArray.length > 0 && 
+        (job.minJdSalary === null || job.maxJdSalary === null || 
+        !salaryArray.some(selectedSalary => job.maxJdSalary >= selectedSalary.value ))) return false;
+      
+      if(locationArray.length > 0 && (
+        !locationArray.some(selectedLocation => job.location === selectedLocation.label))) return false; 
+
+      if (companyFilter && job.companyName && !job.companyName.toLowerCase().includes(companyFilter.toLowerCase())) return false;
+      return true;
   });
 
   if (isLoading) {
@@ -134,48 +144,47 @@ function App() {
     
     <div className='app'>
       <div className="filter-bar">
-        <div className="filter-item">
-          <Multiselect
-            options={roleOptions}
-            displayValue="label"
+          
+          <Select
+            isMulti
+            name="Roles"
             placeholder="Roles"
-            onSelect={(selectedList) => setSelectedRole(selectedList[0])}
-            onRemove={() => setSelectedRole(null)}
+            options={roleOptions}
+            onChange={(selectedList)=>setSelectedRole(selectedList.length > 0 ? selectedList : null)}            
+            className="basic-multi-select"
+            
           />
-          
-        </div>
-        <div className="filter-item">
-          <Multiselect
-            options={experienceOptions}
-            displayValue="label"
+     
+          <Select
+            isMulti
+            name="Experience"
             placeholder="Experience"
-            onSelect={(selectedList) => setSelectedExperience(selectedList[0])}
-            onRemove={() => setSelectedExperience(null)}
+            options={experienceOptions}
+            onChange={(selectedList)=>setSelectedExperience(selectedList.length > 0 ? selectedList : null)}
+            className="basic-multi-select"
+            
           />
-        </div>
-        <div className="filter-item">
-          <Multiselect
+    
+          <Select
+            isMulti
+            name="Salary"
+            placeholder="Minimum Base Pay Salary"
             options={salaryOptions}
-            displayValue="label"
-            placeholder=" Minimum Base Pay Salary"
-            onSelect={(selectedList) => setSelectedSalary(selectedList[0])}
-            onRemove={() => setSelectedSalary(null)}
+            onChange={(selectedList)=>setSelectedSalary(selectedList.length > 0 ? selectedList : null)}
+            className="basic-multi-select"
+            
           />
-        </div>
-        
-        <div className='filter-item'>
-          <Multiselect 
+       
+          <Select
+            isMulti
+            name="Location"
+            placeholder="Location"
             options={locationOptions}
-            displayValue="label"
-            placeholder=" Location"
-            onSelect={(selectedList) =>{ console.log("Selected locations:", selectedList); 
-            setSelectedLocation(selectedList.length > 0 ? selectedList[0] : null)}}
-            onRemove={() => setSelectedLocation(null)}
+            onChange={(selectedList)=>setSelectedLocation(selectedList.length > 0 ? selectedList : null)}
+            className="basic-multi-select"
+            
           />
-        </div>
-        
-        <div className='filter-item'>
-          
+      
           <input 
             type='text'
             label='Company'
@@ -184,9 +193,10 @@ function App() {
               
               border: '0.5px solid #ccc',
               borderRadius: '4px',
-              height:'32px',
-              padding: '8px 0 8px 20px',
-              minWidth: '170px',
+              padding: '8px 8px 8px 8px',
+              minWidth: 'auto',
+              fontWeight:'400',
+              fontSize:'16px'
               
             }}
             value={companyFilter}
@@ -194,7 +204,6 @@ function App() {
               
               setCompanyFilter(e.target.value);}}
           /> 
-         </div>
         
       </div>
       
