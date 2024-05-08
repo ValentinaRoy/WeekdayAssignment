@@ -5,30 +5,30 @@
 -Start the development server using npm start
 -Open http://localhost:3000 with your browser to see the result.
 
-## Technologies Used 
+# Technologies Used 
 
 -ReactJs
 -Redux
 -CSS
 -Material UI
 
-### Hosted on site 
+# Hosted on site 
 https://weekday-assignment-pied-one.vercel.app/
 
-### Folder Structure
+# Folder Structure
 Project folder contains the src folder where all the code resides.
 The src folder has an main page App.js of the project .
 The src folder has another folder named components where the custom created UI components are stored.
 
 
-### Functionalities Implemented
+# Functionalities Implemented
 Job Cards
 Filters
 Infinite Scroll
 Responsive Design
 
-### Responsiveness
-The UI created is Responsiveness and mobile friendly.
+# Responsiveness
+The UI created is Responsive.
 
-### Project Image
+# Project Image
 ![alt text](image.png)
